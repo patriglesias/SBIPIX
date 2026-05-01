@@ -12,7 +12,9 @@ from sbi import inference as Inference
 import pickle
 import seaborn as sns
 import sklearn.metrics as sm
-from scipy import stats, truncnorm
+
+from scipy import stats
+truncnorm=stats.truncnorm
 from tqdm import tqdm, trange
 from astropy.io import fits
 from astropy.cosmology import FlatLambdaCDM
@@ -429,14 +431,18 @@ class sbipix():
         -------
         list
             [noisy_magnitude, uncertainty]
+
+        ## Notes
+        Error handling include_limits=False
         """
+        
         # Magnitude-dependent uncertainty bins
         i_not_last_bin = [10,12,13,14,15,16,17,18]
         percentiles = self.percentiles
         flux = mag_conversion(mag, convert_to='flux')
 
         # Determine uncertainty based on magnitude and apply detection limit
-        if self.include_limit and flux > self.limits[filter_idx]:
+        if self.include_limits and flux > self.limits[filter_idx]:
             # Assign uncertainty based on magnitude bin
             if mag < percentiles[0, filter_idx]:
                 mag_err = np.random.normal(
@@ -463,6 +469,7 @@ class sbipix():
             # Add noise
             noise = np.random.normal(0.0, np.abs(mag_err))
             mag_n_noise = mag + noise
+
         else:
             # Non-detection
             mag_n_noise = 0.0
