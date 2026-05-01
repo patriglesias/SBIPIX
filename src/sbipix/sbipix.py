@@ -351,7 +351,7 @@ class sbipix():
             theta = np.zeros((self.n_simulation, 8))
             sfhs = atlas['sfh_tuple_rec']
             sfhs = np.reshape(sfhs, (self.n_simulation, 6))
-            theta[:, 0] = sfhs[:, 0]  # M* (surviving)
+            theta[:, 0] = sfhs[:, 0]  # M* (formed)
             theta[:, 1] = sfhs[:, 1]  # SFR
             theta[:, 2] = sfhs[:, 3]  # t_25%
             theta[:, 3] = sfhs[:, 4]  # t_50%
@@ -360,7 +360,7 @@ class sbipix():
             theta[:, 6] = atlas['dust'][:, 0]  # A_V
             theta[:, 7] = atlas['zval'][:, 0]  # z
 
-            # Add formed stellar mass if requested
+            # Add surviving stellar mass if requested
             if self.both_masses:
                 theta = np.concatenate((atlas['mstar'].reshape(-1,1), theta), axis=1)
 
